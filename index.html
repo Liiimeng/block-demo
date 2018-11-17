@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+		<title>block-demo</title>
+		<script language="javascript" type="text/javascript" src="web3.js"></script>
+		<script language="javascript" type="text/javascript" src="abi.js"></script>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		var web3js;
+		var orderContract;
+		// 发布d合约地址
+		var contractAddress = "0xd0b354455A3eca1A49392D9E192298aA2127782b";
+		// 钱包账户地址
+		var myAddress = "0x2a8A16129a4A87C7519890ac3E03934F69192368";
+
+
+		function startApp() {
+			// 通过abi和合约地址获取到合约对象
+			orderContract = new web3js.eth.Contract(abi, contractAddress);
+
+
+			// 调用增加订单函数
+			//addItem(23, 67);
+
+			// 调用根据价格获取id的函数
+			getPriceById(24);
+		}
+
+
+		// 向区块链中增加订单
+		function addItem(orderid, price) {
+			orderContract.methods.addItem(orderid, price).send({from: myAddress}, function(error, result){
+				console.log(result);
+			});
+		}
+
+
+		// 根据订单id获取价格
+		function getPriceById(orderid) {
+			orderContract.methods.getPricebyId(orderid).call({from: myAddress}, function(error, result) {
+				console.log(result);
+			});
+		}
+
+
+		// 在页面加载的时候判断浏览器是否安装MetaMask
+		window.addEventListener('load', function() {
+			if(typeof web3 !== 'undefined') {
+				web3js = new Web3(web3.currentProvider);
+				startApp();
+			} else {
+				alert('请安装MetaMask');
+			}
+		});
+
+	</script>
+</html>
